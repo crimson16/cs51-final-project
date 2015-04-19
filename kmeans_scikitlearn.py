@@ -10,7 +10,7 @@
 
 
 from time import time
-import os, struct,random
+import os, struct,random,sys
 import numpy as np
 import matplotlib.pyplot as plt
 
