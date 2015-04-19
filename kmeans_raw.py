@@ -13,7 +13,7 @@
 #################
 
 import numpy as np
-import os, struct,random
+import os, struct,random,sys
 from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 
