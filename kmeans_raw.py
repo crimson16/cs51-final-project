@@ -17,6 +17,8 @@ import os, struct,random,sys
 from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 
+global error
+
 def load_mnist(dataset="training", digits=np.arange(10), path="."):
     """
     Loads MNIST files into 3D numpy arrays
@@ -58,15 +60,31 @@ def load_mnist(dataset="training", digits=np.arange(10), path="."):
 ## Function definitions ##
 ##########################
 
+
+# iterates over means matrix to calculate sum of distances
+def sum(m, xn):
+    diff = xn - m
+    return diff.sum(axis=0)
+
+# iterates over means matrix to calculate sum of absolute distances
+def abs_sum(m, xn):
+    diff = abs(xn - m)
+    return diff.sum(axis=0)
+
 # iterates over means matrix to calculate sum of squared distances
-def iteratemeans(m, xn):
+def sumsq(m, xn):
     diff = (xn - m) ** 2
     return diff.sum(axis=0)
 
+# iterates over means matrix to calculate maximum distances
+def maxdist(m, xn):
+    diff = (xn - m) ** 2
+    return diff.max(axis=0)
+
 # returns index of cluster that minimizes error
-def leastsquares(xn, means):
-    global error
-    errors = np.apply_along_axis(iteratemeans, 1, means, xn) 
+def leastsquares(xn, means, dist_fn):
+    error = 0
+    errors = np.apply_along_axis(dist_fn, 1, means, xn) 
     error += errors[np.argmin(errors)]
     return np.argmin(errors)
 
@@ -83,51 +101,92 @@ train_images_flat = np.array([np.ravel(img) for img in train_images])
 #########################
 k = int(sys.argv[1]) # number of clusters (system argument)
 n = len(train_images) # number of data points
-l2 = len(train_images[0][0]) # number of rows in a training datapoint (assumes each training datapoint is same size)
-l1 = len(train_images[0]) # number of columns in a single training datapoint (assumes each training datapoint is same size)
+l2 = len(train_images[0][0]) # number of rows in a training datapoint
+l1 = len(train_images[0]) # number of columns in a single training datapoint
 l = l1 * l2 # total number of pixels in a training datapoint
-r = np.zeros((n,k)) # matrix of responsibilities (assignments of each datapoint to a cluster)
 means = np.zeros((k,l))
 
-# Randomly initialize cluster centers (note: not k-means++)
-for i in range(n):
-  r[i][random.randint(0,k-1)] = 1
+# Initialize cluster centers randomly (as opposed to k-means++).
+# Returns a n x k matrix with each of the n vectors being one-hot-coded
+# vectors with assignments (i.e. [1,0,0,0] for a datapoint assigned to
+# the first cluster).
+def random_centers(n,k):
+  r = np.zeros((n,k)) # matrix of cluster assignments
+  for i in range(n):
+    r[i][random.randint(0,k-1)] = 1
+  return r
+
+def kmeans():
+  """ TO DO : MARTIN """
 
 #################################################
 # Lloyd's algorithm -- find optimal clustering  #
 #################################################
 
-# value of objective function at each iteration
-error = 0
-# keeps all objective function values for each iteration
-obj = []
+def kmeans(training_data, initial_responsibilities, distfn = sumsq, method = "means"):
+  """
+    Run the k-means (or k-medians, if the "medians" parameter is set
+    to true) algorithm, based off of Lloyd's algorithm.
+    
+    Inputs
+    -------
+    training_data : Data off which to train the model. In the case of
+    MNIST digits, it is a vector of pixel values.
 
-i = 0
-r_new = np.zeros((n,k)) # newly assigned responsibilities: initialized to 0 and updated witin the loop
-while True:
+    initial_responsibilities : Vector of length n containing the initial
+    cluster assignments of each of the datapoints. These can either be
+    initialized randomly or by k-means++.
+
+    distfn : A function that measures distance between points (i.e. sum of
+    squared distances versus sum of absolute distances, etc.)
+
+    method : Can be either "means","medoids", or "medians".
+
+    Returns
+    --------
+    Vector of length n containing the final cluster assignments.
+  """
+  r = initial_responsibilities
+
+  # value of objective function at each iteration
   error = 0
-  # update means
-  for smallk in range(k):
-    ones = np.where(r[:,smallk]==1)[0]
-    means[smallk,:] = np.mean(train_images_flat[list(ones),:], axis=0)
-  # update responsibilities by minimizing sum of squared distances
-  r_new = np.zeros((n,k))
-  # stores indices of k's that minimize ssd
-  newks = np.apply_along_axis(leastsquares, 1, train_images_flat, means)
-  r_new[range(n), newks] = 1
-  # if none of the responsibilities change, then we've reached the optimal cluster assignments
-  if np.all((r_new - r)==0):
-    break
-  else:
-    r = r_new
-  print i, r.sum(axis=0)
-  i += 1
-  obj.append(error)
+  # keeps all objective function values for each iteration
+  obj = []
 
-print 'finished'
-total = time.time() - start
-print total
+  i = 0
+  r_new = np.zeros((n,k)) # newly assigned responsibilities: initialized to 0 and updated witin the loop
+  while True:
+    error = 0
+    # update means
+    for smallk in range(k):
+      ones = np.where(r[:,smallk]==1)[0]
+      if method == "means":
+        means[smallk,:] = np.mean(training_data[list(ones),:], axis=0)
+      elif method == "medoids":
+        means[smallk,:] = training_data[list(ones),:][np.argmin(np.sum((training_data[list(ones),:] -np.mean(training_data[list(ones),:], axis=0))**2,axis=1))]
+      elif method == "medians":
+        means[smallk,:] = np.median(training_data[list(ones),:], axis=0)
+      else:
+        print "Not a valid method specification"
+        break
+    # update responsibilities by minimizing sum of squared distances
+    r_new = np.zeros((n,k))
+    # stores indices of k's that minimize ssd
+    newks = np.apply_along_axis(leastsquares, 1, training_data, means, distfn)
+    r_new[range(n), newks] = 1
+    # if none of the responsibilities change, then we've reached the optimal cluster assignments
+    if np.all((r_new - r)==0):
+      return r, obj
+    else:
+      r = r_new
+    print i, r.sum(axis=0)
+    i += 1
+    obj.append(error)
 
+  print 'finished'
+
+final_responsibilities,obj = kmeans(train_images_flat, random_centers(n,k), distfn = sumsq, method = "medoids")
+print final_responsibilities.sum(axis=0)
 
 # processes and saves mean images and randomly selected images from each cluster
 '''
@@ -156,12 +215,3 @@ for j in range(K):
     counter += 1
 
 '''
-
-
-
-
-
-
-
-
-

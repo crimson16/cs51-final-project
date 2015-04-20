@@ -78,33 +78,33 @@ l = l1 * l2 # total number of pixels in a training datapoint
 r = np.zeros((n,k)) # matrix of responsibilities (assignments of each datapoint to a cluster)
 means = np.zeros((k,l))
 
+# Train k means model
 kmeans = KMeans(init='k-means++', n_clusters=k, n_init=10)
-kmeans.fit(train_images_flat)
-#fit = sklearn.fit(train_images_flat)
+kmeans_fit = kmeans.fit(train_images_flat)
+kmeans_labels = kmeans_fit.labels_
+print kmeans_labels
+
+
+# Given the true labels of the training images (train_labels), determine
+# the majority element (and therefore the labelling of each of the clusters)
+cluster_labels = []
+for assigned_cluster in range(k):
+    cluster_points = np.where(kmeans_labels==assigned_cluster)[0]
+    # labels of training points that were assigned to assigned_cluster
+    cluster_true_labels = train_labels[cluster_points]
+    cluster_true_labels = [int(label[0]) for label in cluster_true_labels]
+    # vector containing the true "label" of each of the k clusters
+    cluster_labels.append(np.argmax(np.bincount(cluster_true_labels)))
+
 
 # Obtain predictions for each point.
 Z = kmeans.predict(test_images_flat)
 
 # For a given cluster, take its "labelling" in order to be whatever
-# true class the majority of the elements belong to.
-#
-# Use this method in order to assign a "label" to each of the clusters,
-# as represented by the cluster_assignments list.
+# true class the majority of the training elements belong to.
+#k
+# Use this method in order to assign an accuracy score (1 or 0)
+# based on whether the training data was accurately classified.
 
-cluster_assignments = []
-cluster_accuracies = []
-for assigned_cluster in range(k):
-	cluster_points = np.where(Z==assigned_cluster)[0]
-	cluster_true_labels = test_labels[cluster_points]
-	cluster_true_labels = [int(label[0]) for label in cluster_true_labels]
-	label_counts = np.bincount(cluster_true_labels)
-	cluster_assignments.append(np.argmax(label_counts))
-	cluster_accuracies.append(float(np.argmax(label_counts))/sum(label_counts))
-
-print cluster_assignments
-print cluster_accuracies # is this correct?
-
-
-
-
-
+cluster_assignment_accuracy = [1 if test_labels[j]==cluster_labels[Z[j]] else 0 for j in range(len(test_labels))]
+print float(np.sum(cluster_assignment_accuracy))/len(cluster_assignment_accuracy)
