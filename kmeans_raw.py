@@ -46,6 +46,7 @@ def load_mnist(dataset="training", digits=np.arange(10), path="."):
     img = pyarray("B", fimg.read())
     fimg.close()
 
+
     ind = [ k for k in range(size) if lbl[k] in digits ]
     N = len(ind)
 
@@ -84,9 +85,8 @@ def maxdist(m, xn):
 
 # returns index of cluster that minimizes error
 def leastsquares(xn, means, dist_fn):
-    print xn.shape
-    print means.shape
     error = 0
+    # should just have to subtract at this point? 
     errors = np.apply_along_axis(dist_fn, 1, means, xn) 
     error += errors[np.argmin(errors)]
     return np.argmin(errors)
@@ -95,7 +95,9 @@ def leastsquares(xn, means, dist_fn):
 ######################################
 # Load in training images and labels #
 ######################################
+# load training images and labels as 60,000 x 28 x 28 array
 train_images,train_labels = load_mnist("training",path=os.getcwd())
+# flatten training images into 60,000 x 784 array
 train_images_flat = np.array([np.ravel(img) for img in train_images])
 
 
@@ -121,11 +123,11 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
     Inputs
     -------
     training_data : Data off which to train the model. In the case of
-    MNIST digits, it is a vector of pixel values.
+    MNIST digits, it is a vector of pixel values in format 60,000 x 784
 
     initial_responsibilities : Vector of length n containing the initial
     cluster assignments of each of the datapoints. These can either be
-    initialized randomly or by k-means++.
+    initialized randomly or by k-means++ and have format 60,000 x 784
 
     distfn : A function that measures distance between points (i.e. sum of
     squared distances versus sum of absolute distances, etc.)
@@ -143,14 +145,15 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
 
   r = np.zeros((n,k)) # create empty array to store cluster assignments
 
-  # stores indices of k's that minimize sum of squared distance
+  # find and store k that minimize sum of square distance for each image
   newks = np.apply_along_axis(leastsquares, 1, training_data, initial_clusters, distfn)
-  r[:, newks] = 1
+  # create one hot coded vector for each image to signify cluster assignment
+  r[range(n), newks] = 1
 
+  # find new means
   while True:
     error = 0 # initialize error to 0
-    # find new means
-    for smallk in range(k):
+    for smallk in range(k): # iterate through clusters
       ones = np.where(r[:,smallk]==1)[0]
       if method == "means":
         means[smallk,:] = np.mean(training_data[list(ones),:], axis=0)
@@ -181,7 +184,7 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
 
   print 'finished'
 
-final_responsibilities,obj = kmeans(train_images_flat, Initialize.random_centers(k), distfn = sumsq, method = "medoids")
+final_responsibilities,obj = kmeans(train_images_flat, Initialize.kmeans_plusplus(k, train_images_flat, abs_sum), distfn = sumsq, method = "medoids")
 print final_responsibilities.sum(axis=0)
 
 # processes and saves mean images and randomly selected images from each cluster
