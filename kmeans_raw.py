@@ -16,6 +16,7 @@ import numpy as np
 import os, struct,random,sys
 from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
+import Initialize
 
 global error
 
@@ -94,7 +95,7 @@ def leastsquares(xn, means, dist_fn):
 ######################################
 train_images,train_labels = load_mnist("training",path=os.getcwd())
 train_images_flat = np.array([np.ravel(img) for img in train_images])
-print train_images[0]
+
 
 #########################
 # Set parameter values  #
@@ -106,24 +107,11 @@ l1 = len(train_images[0]) # number of columns in a single training datapoint
 l = l1 * l2 # total number of pixels in a training datapoint
 means = np.zeros((k,l))
 
-# Initialize cluster centers randomly (as opposed to k-means++).
-# Returns an n x k matrix with each of the n vectors being one-hot-coded
-# vectors with assignments (i.e. [1,0,0,0] for a datapoint assigned to
-# the first cluster).
-def random_centers(n,k):
-  r = np.zeros((n,k)) # matrix of cluster assignments
-  for i in range(n):
-    r[i][random.randint(0,k-1)] = 1
-  return r
-
-def kmeans():
-  """ TO DO : MARTIN """
-
 #################################################
 # Lloyd's algorithm -- find optimal clustering  #
 #################################################
 
-def kmeans(training_data, initial_responsibilities, distfn = sumsq, method = "means"):
+def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
   """
     Run the k-means (or k-medians, if the "medians" parameter is set
     to true) algorithm, based off of Lloyd's algorithm.
@@ -146,34 +134,42 @@ def kmeans(training_data, initial_responsibilities, distfn = sumsq, method = "me
     --------
     Vector of length n containing the final cluster assignments.
   """
-  r = initial_responsibilities
+  
+  error = 0 # value of objective function at each iteration 
+  obj = [] # keeps all objective function values for each iteration
+  i = 0 # keep track of iterations
 
-  # value of objective function at each iteration
-  error = 0
-  # keeps all objective function values for each iteration
-  obj = []
+  # update responsibilities by minimizing sum of squared distances
+  r = np.zeros((n,k))
+  
+  # stores indices of k's that minimize ssd
+  newks = np.apply_along_axis(leastsquares, 1, training_data, initial_clusters, distfn)
+  r[:, newks] = 1
 
-  i = 0
-  r_new = np.zeros((n,k)) # newly assigned responsibilities: initialized to 0 and updated witin the loop
   while True:
-    error = 0
-    # update means
+    error = 0 # initialize error to 0
+
+    # find new means
     for smallk in range(k):
       ones = np.where(r[:,smallk]==1)[0]
       if method == "means":
         means[smallk,:] = np.mean(training_data[list(ones),:], axis=0)
       elif method == "medoids":
-        means[smallk,:] = training_data[list(ones),:][np.argmin(np.sum((training_data[list(ones),:] -np.mean(training_data[list(ones),:], axis=0))**2,axis=1))]
+        means[smallk,:] = training_data[list(ones),:][np.argmin(np.sum((training_data[list(ones),:] 
+          - np.mean(training_data[list(ones),:], axis=0))**2,axis=1))]
       elif method == "medians":
         means[smallk,:] = np.median(training_data[list(ones),:], axis=0)
       else:
         print "Not a valid method specification"
         break
+
     # update responsibilities by minimizing sum of squared distances
     r_new = np.zeros((n,k))
+
     # stores indices of k's that minimize ssd
     newks = np.apply_along_axis(leastsquares, 1, training_data, means, distfn)
     r_new[range(n), newks] = 1
+
     # if none of the responsibilities change, then we've reached the optimal cluster assignments
     if np.all((r_new - r)==0):
       return r, obj
@@ -185,7 +181,7 @@ def kmeans(training_data, initial_responsibilities, distfn = sumsq, method = "me
 
   print 'finished'
 
-final_responsibilities,obj = kmeans(train_images_flat, random_centers(n,k), distfn = sumsq, method = "medoids")
+final_responsibilities,obj = kmeans(train_images_flat, Initialize.random_centers(k), distfn = sumsq, method = "medoids")
 print final_responsibilities.sum(axis=0)
 
 # processes and saves mean images and randomly selected images from each cluster

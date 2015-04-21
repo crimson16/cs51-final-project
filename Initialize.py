@@ -1,3 +1,14 @@
+#####################################################################
+#                           Initialize.py                           #
+#####################################################################
+# Allows initialization of cluster centers                          #
+# 1) using K-means++ (kmeans_plusplus)                              #
+# 2) randomly (random_centers)                                      # 
+#####################################################################
+
+# import packages
+import numpy as np
+
 """
   Helper function that returns the closest cluster center for a given 
   data point.
@@ -109,12 +120,12 @@ def kmeans_plusplus(k,images, dist_fn):
   Only the inner 20 x 20 array gets randomly initiated values
 """
 def random_centers(k):
-  clusters = np.zeros(k) # array to store clusters in 
+  clusters = np.zeros((k,28,28)) # array to store clusters in 
   new_cluster = np.zeros((28,28)) # initiate new cluster
 
   # generate k new clusters and save them in clusters
-  for c in k: 
-    new_cluster[4:24,4:24] = np.floor(np.random.random_sample((24,24))*256)
+  for c in range(k): 
+    new_cluster[4:24,4:24] = np.floor(np.random.random_sample((20,20))*256)
     clusters[c] = new_cluster
 
   return clusters
