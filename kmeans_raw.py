@@ -94,7 +94,7 @@ def leastsquares(xn, means, dist_fn):
 ######################################
 train_images,train_labels = load_mnist("training",path=os.getcwd())
 train_images_flat = np.array([np.ravel(img) for img in train_images])
-
+print train_images[0]
 
 #########################
 # Set parameter values  #
@@ -107,7 +107,7 @@ l = l1 * l2 # total number of pixels in a training datapoint
 means = np.zeros((k,l))
 
 # Initialize cluster centers randomly (as opposed to k-means++).
-# Returns a n x k matrix with each of the n vectors being one-hot-coded
+# Returns an n x k matrix with each of the n vectors being one-hot-coded
 # vectors with assignments (i.e. [1,0,0,0] for a datapoint assigned to
 # the first cluster).
 def random_centers(n,k):
