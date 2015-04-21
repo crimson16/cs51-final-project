@@ -84,6 +84,8 @@ def maxdist(m, xn):
 
 # returns index of cluster that minimizes error
 def leastsquares(xn, means, dist_fn):
+    print xn.shape
+    print means.shape
     error = 0
     errors = np.apply_along_axis(dist_fn, 1, means, xn) 
     error += errors[np.argmin(errors)]
@@ -137,18 +139,16 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
   
   error = 0 # value of objective function at each iteration 
   obj = [] # keeps all objective function values for each iteration
-  i = 0 # keep track of iterations
+  i = 0 # keep track of iteration
 
-  # update responsibilities by minimizing sum of squared distances
-  r = np.zeros((n,k))
-  
-  # stores indices of k's that minimize ssd
+  r = np.zeros((n,k)) # create empty array to store cluster assignments
+
+  # stores indices of k's that minimize sum of squared distance
   newks = np.apply_along_axis(leastsquares, 1, training_data, initial_clusters, distfn)
   r[:, newks] = 1
 
   while True:
     error = 0 # initialize error to 0
-
     # find new means
     for smallk in range(k):
       ones = np.where(r[:,smallk]==1)[0]
