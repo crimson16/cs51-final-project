@@ -32,7 +32,7 @@ import numpy as np
 
 """
 def _make_clusters(assignments):
-  
+
 
 
 
@@ -98,6 +98,3 @@ def std_deviation(cluster):
   None (prints results as digit: x, purity: y%, standard deviation: z)
 """
 def print_results(assignments, labels): 
-
-
-
