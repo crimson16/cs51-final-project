@@ -174,7 +174,7 @@ def final_accuracy(assignments, labels, images, cluster_centers):
       print "Digit: %d  Purity: %f  Standard Deviation: %f  Count: %d" % (
         print_array[i][0], print_array[i][1],print_array[i][2],print_array[i][3])
   else:
-    print "Minimum cluster number is 10"
+    raise ValueError("Minimum cluster number is 10")
 
   return print_array
 
