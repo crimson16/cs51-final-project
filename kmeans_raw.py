@@ -86,7 +86,6 @@ def maxdist(m, xn):
 # returns index of cluster that minimizes error
 def leastsquares(xn, means, dist_fn):
     error = 0
-    # should just have to subtract at this point? 
     errors = np.apply_along_axis(dist_fn, 1, means, xn) 
     error += errors[np.argmin(errors)]
     return np.argmin(errors)
@@ -186,6 +185,8 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
 
 final_responsibilities,obj = kmeans(train_images_flat, Initialize.kmeans_plusplus(k, train_images_flat, abs_sum), distfn = sumsq, method = "medoids")
 print final_responsibilities.sum(axis=0)
+print final_responsibilities[0]
+print obj
 
 # processes and saves mean images and randomly selected images from each cluster
 '''

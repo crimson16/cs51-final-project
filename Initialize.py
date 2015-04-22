@@ -3,7 +3,9 @@
 #####################################################################
 # Allows initialization of cluster centers                          #
 # 1) using K-means++ (kmeans_plusplus)                              #
-# 2) randomly (random_centers)                                      # 
+# 2) randomly (random_centers)                                      #
+#                                                                   #
+# Martin Reindl, Olivia Angiuli, Ty Roccca, Wilder Wohns            # 
 #####################################################################
 
 # import packages
@@ -54,8 +56,8 @@ def _find_Dx (image, dist_fn, clusters, smallk):
   Outputs
   -------
   A vector corresponding to the weights of the elements of v. In our 
-  case this is the vector containing the probability that a given 
-  element will be picked as a new cluster center
+  case this is a vector of length 60,000 that contains the probability 
+  that a given element will be picked as a new cluster center
 """
 def _weight_fn (v): 
   v = v ** 2 # square distances
