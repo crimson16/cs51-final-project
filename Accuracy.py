@@ -5,7 +5,7 @@
 # 1) using K-means++ (kmeans_plusplus)                                        #
 # 2) randomly (random_centers)                                                #
 #                                                                             #
-# Martin Reindl, Olivia Angiuli, Ty Roccca, Wilder Wohns                      # 
+# Martin Reindl, Olivia Angiuli, Ty Rocca, Wilder Wohns                      # 
 ###############################################################################
 
 # import packages

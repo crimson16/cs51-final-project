@@ -19,53 +19,20 @@ from numpy import append, array, int8, uint8, zeros
 
 from sklearn.cluster import KMeans
 
-def load_mnist(dataset="training", digits=np.arange(10), path="."):
-    """
-    Loads MNIST files into 3D numpy arrays
-
-    Adapted from: http://abel.ee.ucla.edu/cvxopt/_downloads/mnist.py
-    """
-
-    if dataset == "training":
-        fname_img = os.path.join(path, 'train-images-idx3-ubyte')
-        fname_lbl = os.path.join(path, 'train-labels-idx1-ubyte')
-    elif dataset == "testing":
-        fname_img = os.path.join(path, 't10k-images-idx3-ubyte')
-        fname_lbl = os.path.join(path, 't10k-labels-idx1-ubyte')
-    else:
-        raise ValueError("dataset must be 'testing' or 'training'")
-
-    flbl = open(fname_lbl, 'rb')
-    magic_nr, size = struct.unpack(">II", flbl.read(8))
-    lbl = pyarray("b", flbl.read())
-    flbl.close()
-
-    fimg = open(fname_img, 'rb')
-    magic_nr, size, rows, cols = struct.unpack(">IIII", fimg.read(16))
-    img = pyarray("B", fimg.read())
-    fimg.close()
-
-    ind = [ k for k in range(size) if lbl[k] in digits ]
-    N = len(ind)
-
-    images = zeros((N, rows, cols), dtype=uint8)
-    labels = zeros((N, 1), dtype=int8)
-    for i in range(len(ind)):
-        images[i] = array(img[ ind[i]*rows*cols : (ind[i]+1)*rows*cols ]).reshape((rows, cols))
-        labels[i] = lbl[ind[i]]
-
-    return images, labels
+import Load
 
 ######################################
 # Load in training images and labels #
 ######################################
-train_images,train_labels = load_mnist("training",path=os.getcwd())
+# load training and testing images and labels as 60,000 x 28 x 28 array
+train_images,train_labels = Load.load_mnist("training",path=os.getcwd())
+test_images,test_labels = Load.load_mnist("testing",path=os.getcwd())
+# flattens train_labels from format [[3],[2],[6],...] to [3,2,6,...]
+train_labels = [label[0] for label in train_labels]
+test_labels = [label[0] for label in test_labels]
+# flatten training images into 60,000 x 784 array
 train_images_flat = np.array([np.ravel(img) for img in train_images])
-
-test_images,test_labels = load_mnist("testing",path=os.getcwd())
 test_images_flat = np.array([np.ravel(img) for img in test_images])
-
-
 
 #########################
 # Set parameter values  #
