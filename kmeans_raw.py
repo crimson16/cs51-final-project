@@ -18,8 +18,6 @@ from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 import Initialize
 
-global error
-
 def load_mnist(dataset="training", digits=np.arange(10), path="."):
     """
     Loads MNIST files into 3D numpy arrays
@@ -154,7 +152,6 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
 
   # find new means
   while True:
-    error = 0 # initialize error to 0
     for smallk in range(k): # iterate through clusters
       ones = np.where(r[:,smallk]==1)[0]
       # The k-means method updates cluster centers as being the mean of each corresponding
@@ -223,3 +220,5 @@ for j in range(K):
     counter += 1
 
 '''
+
+Accuracy.final_accuracy(final_responsibilities, train_labels, train_images_flat)
