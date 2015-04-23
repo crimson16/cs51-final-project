@@ -6,14 +6,16 @@
 # Martin Reindl, Olivia Angiuli, Ty Roccca, Wilder Wohns                      # 
 ###############################################################################
 
+# import packages
+import numpy as np
 
 # iterates over means matrix to calculate sum of differences
-def sum(m, xn):
+def diff_sum(xn, m):
     diff = xn - m
     return diff.sum(axis=0)
 
 # iterates over means matrix to calculate sum of absolute differences
-def abs_sum(m, xn):
+def abs_sum(xn, m):
     diff = abs(xn - m)
     return diff.sum(axis=0)
 
@@ -23,7 +25,7 @@ def sumsq(xn, m):
     return diff.sum(axis=0)
 
 # iterates over means matrix to calculate maximum squared distance
-def maxdist(m, xn):
+def maxdist(xn, m):
     diff = (xn - m) ** 2
     return diff.max(axis=0)
 
