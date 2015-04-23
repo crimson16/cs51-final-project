@@ -150,7 +150,6 @@ def final_accuracy(assignments, labels, images, cluster_centers):
     info[i][2] = _std(clusters[i], cluster_centers[i], images)
     #find number of elements in cluster
     info[i][3] = len(clusters[i])
-    print info[i][0]
 
 
   # initialize print_array to hold final information 

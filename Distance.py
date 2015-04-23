@@ -6,6 +6,8 @@
 # Martin Reindl, Olivia Angiuli, Ty Roccca, Wilder Wohns                      # 
 ###############################################################################
 
+# import packages
+import numpy as np
 
 # iterates over means matrix to calculate sum of differences
 def diff_sum(xn, m):
