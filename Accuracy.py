@@ -37,7 +37,7 @@ def _make_clusters(assignments):
 
   # find clusters
   for i in range(len(assignments[0])):
-    clusters.append(np.nonzero(assignments[:,i]))
+    clusters.append(np.nonzero(assignments[:,i])[0])
 
   return clusters
 
@@ -66,17 +66,17 @@ def _make_clusters(assignments):
 """
 def _digit_and_purity(cluster, labels):
   e = len(cluster) # number of elements in cluster
-  cluster_labels = np.zeros(k) # array to store labels for our cluster in 
+  cluster_labels = np.zeros(e) # array to store labels for our cluster in 
 
   # find the labels assigned to each image in the cluster
   for i in range(e):
-    cluster_labels[i] = labels[cluster[e]]
+    cluster_labels[i] = labels[cluster[i]]
 
   # find most common digit and its frequency 
-  digit, digit_count = stats.mode(cluster)
+  digit, digit_count = stats.mode(cluster_labels)
   digit = digit[0] 
   digit_count = digit_count[0] 
-  purity = digit_count/k 
+  purity = digit_count/e 
 
   return digit, purity
 
@@ -101,15 +101,14 @@ def _digit_and_purity(cluster, labels):
 """
 def _std(cluster, center, images):
   e = len(cluster) # number of elements in cluster
-  cluster_images = np.zeros(k) # array to store the actual cluster images in 
-
+  cluster_images = np.zeros((e,784)) # array to store the actual cluster images in 
+  
   # retrieve cluster images
   for i in range(e):
     cluster_images[i] = images[cluster[i]]
 
   # find squared distances from center for each cluster
-  find_distance = np.vectorize(Distance.sumsq)
-  distances = find_distance(cluster_images,center)
+  distances = np.apply_along_axis(Distance.sumsq, 1, cluster_images, center)
 
   #find standard deviation
   return math.sqrt(np.sum(distances)/e)
@@ -151,48 +150,33 @@ def final_accuracy(assignments, labels, images, cluster_centers):
     info[i][2] = _std(clusters[i], cluster_centers[i], images)
     #find number of elements in cluster
     info[i][3] = len(clusters[i])
+    print info[i][0]
+
 
   # initialize print_array to hold final information 
-  print_array = np.zeros((10,4))
+  final = np.zeros((10,4))
   # if more clusters than digits, we have to create weighted averages 
   # for the final results
   if k > 10: 
     for i in range(10):
-      # filter clusters to only contain clusters with digit i 
-      condition = clusters[:,0] == i
-      digit_clusters = np.compress(condition,clusters,axis=0)
+      # filter info to only contain clusters with digit i 
+      condition = info[:,0] == i
+      digit_info = np.compress(condition,info,axis=0)
 
-      # create weighted averages and save them in print_array
-      weights = info[:,3]/np.sum(info[:,3])
+      # create weighted averages and save them in final
+      weights = digit_info[:,3]/np.sum(digit_info[:,3])
 
-      print_array[i][0] = i # set digit
-      print_array[i][1] = np.sum(weights * info[:,1]) # find weighted purity
-      print_array[i][2] = np.sum(weights * info[:,2]) # find weighted std
-      print_array[i][3] = np.sum(info[:,3]) # find total count
+      final[i][0] = i # set digit
+      final[i][1] = np.sum(weights * digit_info[:,1]) # find weighted purity
+      final[i][2] = np.sum(weights * digit_info[:,2]) # find weighted std
+      final[i][3] = np.sum(digit_info[:,3]) # find total count
 
       # print to command line 
-      print "Digit: %d  Purity: %f  Standard Deviation: %f  Count: %d" % (
-        print_array[i][0], print_array[i][1],print_array[i][2],print_array[i][3])
+      print "Digit: %d  Purity: %4.1f" % (final[i][0], final[i][1]*100) + "%" + \
+        " SD: %6.1f  Count: %d" % (final[i][2], final[i][3])
   else:
     raise ValueError("Minimum cluster number is 10")
 
-  return print_array
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return final
 
 

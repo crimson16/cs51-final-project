@@ -17,6 +17,8 @@ import os, struct,random,sys
 from array import array as pyarray
 from numpy import append, array, int8, uint8, zeros
 import Initialize
+import Accuracy
+import Distance
 
 def load_mnist(dataset="training", digits=np.arange(10), path="."):
     """
@@ -57,50 +59,16 @@ def load_mnist(dataset="training", digits=np.arange(10), path="."):
         labels[i] = lbl[ind[i]]
     return images, labels
 
-##########################
-## Function definitions ##
-##########################
-
-
-# iterates over means matrix to calculate sum of differences
-def sum(m, xn):
-    diff = xn - m
-    return diff.sum(axis=0)
-
-# iterates over means matrix to calculate sum of absolute differences
-def abs_sum(m, xn):
-    diff = abs(xn - m)
-    return diff.sum(axis=0)
-
-# iterates over means matrix to calculate sum of squared distances
-def sumsq(m, xn):
-    diff = (xn - m) ** 2
-    return diff.sum(axis=0)
-
-# iterates over means matrix to calculate maximum squared distance
-def maxdist(m, xn):
-    diff = (xn - m) ** 2
-    return diff.max(axis=0)
-
-# returns index of cluster that minimizes error
-def leastsquares(xn, means, dist_fn):
-    # Pass in a distance function, and then find the distance, via that measure,
-    # between every point and each cluster center
-    errors = np.apply_along_axis(dist_fn, 1, means, xn) 
-    # For each datapoint, find the minimum distance cluster center.
-    return np.argmin(errors)
-
 
 ######################################
 # Load in training images and labels #
 ######################################
 # load training images and labels as 60,000 x 28 x 28 array
-train_images,train_labels = load_mnist("training",path=os.getcwd())
+train_images,train_labels = load_mnist("testing",path=os.getcwd())
 # flattens train_labels from format [[3],[2],[6],...] to [3,2,6,...]
 train_labels = [label[0] for label in train_labels]
 # flatten training images into 60,000 x 784 array
 train_images_flat = np.array([np.ravel(img) for img in train_images])
-
 
 #########################
 # Set parameter values  #
@@ -113,11 +81,12 @@ l = l1 * l2 # total number of pixels in a training datapoint
 means = np.zeros((k,l)) # initial cluster means -- initialized to k x l 0s
                         # representing the pixels of the k cluster centers
 
+
 #################################################
 # Lloyd's algorithm -- find optimal clustering  #
 #################################################
 
-def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
+def kmeans(training_data, initial_clusters, distfn = Distance.sumsq, method = "means"):
   """
     Run the k-means (or k-medians, if the "medians" parameter is set
     to true) algorithm, based off of Lloyd's algorithm.
@@ -131,7 +100,7 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
     cluster assignments of each of the datapoints. These can either be
     initialized randomly or by k-means++ and have format 60,000 x 784
 
-    distfn : A function that measures distance between points (i.e. sum of
+    distfn : A function tdhat measures distance between points (i.e. sum of
     squared distances versus sum of absolute distances, etc.)
 
     method : Can be either "means","medoids", or "medians".
@@ -146,7 +115,7 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
   r = np.zeros((n,k)) # create empty array to store cluster assignments
 
   # find and store k that minimize sum of square distance for each image
-  newks = np.apply_along_axis(leastsquares, 1, training_data, initial_clusters, distfn)
+  newks = np.apply_along_axis(Distance.leastsquares, 1, training_data, initial_clusters, distfn)
   # create one hot coded vector for each image to signify cluster assignment
   r[range(n), newks] = 1
 
@@ -176,12 +145,12 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
     r_new = np.zeros((n,k))
 
     # stores indices of k's that minimize ssd
-    newks = np.apply_along_axis(leastsquares, 1, training_data, means, distfn)
+    newks = np.apply_along_axis(Distance.leastsquares, 1, training_data, means, distfn)
     r_new[range(n), newks] = 1
 
     # if none of the responsibilities change, then we've reached the optimal cluster assignments
     if np.all((r_new - r)==0):
-      return r
+      return r, means
     else:
       r = r_new
     # After each iteration, print iteration number and the number of images assigned to a given cluster.
@@ -190,7 +159,8 @@ def kmeans(training_data, initial_clusters, distfn = sumsq, method = "means"):
 
   print 'finished'
 
-final_responsibilities = kmeans(train_images_flat, Initialize.kmeans_plusplus(k, train_images_flat, abs_sum), distfn = sumsq, method = "medoids")
+final_responsibilities, final_clusters = kmeans(train_images_flat, Initialize.random_centers(k), 
+  distfn = Distance.sumsq, method = "medoids")
 print final_responsibilities.sum(axis=0)
 
 # processes and saves mean images and randomly selected images from each cluster
@@ -221,4 +191,4 @@ for j in range(K):
 
 '''
 
-Accuracy.final_accuracy(final_responsibilities, train_labels, train_images_flat)
+Accuracy.final_accuracy(final_responsibilities, train_labels, train_images_flat, final_clusters)
