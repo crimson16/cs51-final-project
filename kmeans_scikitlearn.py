@@ -20,6 +20,7 @@ from numpy import append, array, int8, uint8, zeros
 from sklearn.cluster import KMeans
 
 import Load
+import Image
 
 ######################################
 # Load in training images and labels #
@@ -38,14 +39,9 @@ test_images_flat = np.array([np.ravel(img) for img in test_images])
 # Set parameter values  #
 #########################
 k = int(sys.argv[1]) # number of clusters (system argument)
-n = len(train_images) # number of data points
-l2 = len(train_images[0][0]) # number of rows in a training datapoint (assumes each training datapoint is same size)
-l1 = len(train_images[0]) # number of columns in a single training datapoint (assumes each training datapoint is same size)
-l = l1 * l2 # total number of pixels in a training datapoint
-r = np.zeros((n,k)) # matrix of responsibilities (assignments of each datapoint to a cluster)
-means = np.zeros((k,l))
 
 # Train k means model
+
 kmeans = KMeans(init='k-means++', n_clusters=k, n_init=10)
 kmeans_fit = kmeans.fit(train_images_flat)
 kmeans_labels = kmeans_fit.labels_
