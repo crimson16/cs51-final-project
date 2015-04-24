@@ -14,8 +14,9 @@ import Distance
 def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
   method = "means"):
   """
-    Run the k-means (or k-medians, if the "medians" parameter is set
-    to true) algorithm, based off of Lloyd's algorithm.
+    Run the k-means (if method = "means") or k-medians
+    (if method = "medians"), or k-medoids (if method = "medoids"), 
+    algorithm, based off of Lloyd's algorithm.
     
     Inputs
     -------
@@ -33,7 +34,10 @@ def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
 
     Returns
     --------
-    Vector of length n containing the final cluster assignments.
+    final_responsibilities : A n x k vector containing one-hot-coded
+    cluster assignments for each datapoint.
+    final_cluster_centers: A k x 784 vector containing the pixel values
+    for the k centers to which the clustering converged.
   """
   
   n = len(training_data) # number of training instances
@@ -51,7 +55,7 @@ def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
   # create a "means" vector to store cluster centers as they are updated
   means = initial_clusters
 
-  # find new means
+  # Find new means
   while True:
     for smallk in range(k): # iterate through clusters
       ones = np.where(r[:,smallk]==1)[0]
@@ -77,10 +81,10 @@ def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
         raise ValueError("Not a valid method specification; must be 'means',\
           'medoids', or 'medians'")
 
-    # update responsibilities by minimizing sum of squared distances
+    # update responsibilities by minimizing distance metric
     r_new = np.zeros((n,k))
 
-    # stores indices of k's that minimize ssd
+    # stores indices of k's that minimize distance metric
     newks = np.apply_along_axis(Distance.leastsquares, 1, training_data,
       means, distfn)
     r_new[range(n), newks] = 1
