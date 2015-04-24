@@ -44,17 +44,6 @@ kmeans_fit = kmeans.fit(train_images_flat)
 kmeans_labels = kmeans_fit.labels_
 kmeans_centers = kmeans_fit.cluster_centers_ 
 
-# # Given the true labels of the training images (train_labels), determine
-# # the majority element (and therefore the labelling of each of the clusters)
-# cluster_labels = []
-# for assigned_cluster in range(k):
-#     cluster_points = np.where(kmeans_labels==assigned_cluster)[0]
-#     # labels of training points that were assigned to assigned_cluster
-#     cluster_true_labels = train_labels[cluster_points]
-#     cluster_true_labels = [int(label[0]) for label in cluster_true_labels]
-#     # vector containing the true "label" of each of the k clusters
-#     cluster_labels.append(np.argmax(np.bincount(cluster_true_labels)))
-
 # Initialize a vector of responsibilities in a one-hot-coded format.
 final_responsibilities = np.zeros((len(train_images_flat),k))
 # For each cluster assignment, assign the appropriate vector in the
@@ -66,12 +55,5 @@ for imgnum in range(len(train_images_flat)):
 # Obtain predictions for each point.
 Z = kmeans.predict(test_images_flat)
 
+# Determine accuracies.
 Accuracy.final_accuracy(final_responsibilities, train_labels, train_images_flat, kmeans_centers)
-
-
-
-# For a given cluster, take its "labelling" in order to be whatever
-# true class the majority of the training elements belong to.
-#k
-# Use this method in order to assign an accuracy score (1 or 0)
-# based on whether the training data was accurately classified.
