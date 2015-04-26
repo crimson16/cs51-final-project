@@ -62,7 +62,7 @@ def load_mnist(dataset="training", digits=np.arange(10), path=".", prop = 100):
     return images, labels
 
 
-def save_images(k, train_images, final_responsibilities, final_clusters):
+def save_images(k, train_images, final_responsibilities, final_clusters, title):
     """
     Save cluster centers, as well as randomly selected images from each
     cluster, to file.
@@ -79,6 +79,9 @@ def save_images(k, train_images, final_responsibilities, final_clusters):
 
     final_clusters : A k x 784 vector containing the pixel values
     for the k centers to which the clustering converged.
+
+    title : The title for the output for the cluster
+        format is Method_Init-type_Cluster_K
 
     Returns
     --------
@@ -98,10 +101,10 @@ def save_images(k, train_images, final_responsibilities, final_clusters):
       # Make an image from the uint format
       img = Image.fromarray(data, 'RGB')
       # If a directory to store the image doesn't already exist, create it
-      if not os.path.exists('./cluster' + str(k)):
-        os.mkdir('./cluster' + str(k))
+      if not os.path.exists('./' + title):
+        os.mkdir('./' + title)
       # Save image of cluster center as a png  
-      img.save('./cluster' + str(k) + '/mean' + str(j) + '.png')
+      img.save('./' + title + '/mean' + str(j) + '.png')
 
       # Randomly saves imgnum images from each cluster
       indices = np.nonzero(final_responsibilities[:, j])
@@ -114,6 +117,6 @@ def save_images(k, train_images, final_responsibilities, final_clusters):
         cluster_data[:,:,1] = np.reshape(train_images[sampled_n, :], (28,28))
         cluster_data[:,:,2] = np.reshape(train_images[sampled_n, :], (28,28))
         img = Image.fromarray(cluster_data, 'RGB')
-        img.save('./cluster' + str(k) + '/cluster' + str(j) + '_' + str(counter) +
+        img.save('./' + title + '/cluster' + str(j) + '_' + str(counter) +
           '.png')
         counter += 1

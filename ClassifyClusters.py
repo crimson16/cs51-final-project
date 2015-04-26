@@ -27,9 +27,11 @@ it to our data set in a knn style
 import Distance
 import numpy as np
 def classify(cluster_set, test_set, test_labels, distfn = Distance.sumsq, n = None):
-    
+
     k = len(cluster_set)
+    # Clusters is the array of final cluster means
     clusters = []
+    # 
     c_index = []
     for cluster in cluster_set:
         clusters.append(cluster[0])
@@ -49,10 +51,10 @@ def classify(cluster_set, test_set, test_labels, distfn = Distance.sumsq, n = No
     n_wrong = np.count_nonzero(diffs)
 
     prediction_level = ((n - n_wrong) / float(n))*100
-    print "Our accuracy in predicting test data was {0} %".format(prediction_level)
+    print "Our accuracy in predicting test data for k = {0} was {1} %".format(k,prediction_level)
     
     # Return the cluster center
-    return [k, prediction_level]
+    return k, prediction_level, cluster_set
 
     
 
