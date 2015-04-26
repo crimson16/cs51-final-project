@@ -1,7 +1,7 @@
 ###############################################################################
 #                                  Distance.py                                #
 ###############################################################################
-# Allows calculating the distance between two images                          #                                #
+# Allows calculating the distance between two images                          #                                
 #                                                                             #
 # Martin Reindl, Olivia Angiuli, Ty Roccca, Wilder Wohns                      # 
 ###############################################################################

@@ -17,10 +17,10 @@ from array import array as pyarray
 from cvxopt.base import matrix
 import numpy as np
 from numpy import append, array, int8, uint8, zeros
-import Image
+from PIL import Image
 import random
 
-def load_mnist(dataset="training", digits=np.arange(10), path="."):
+def load_mnist(dataset="training", digits=np.arange(10), path=".", prop = 100):
     """
     Loads MNIST files into 3D numpy arrays
 
@@ -50,11 +50,11 @@ def load_mnist(dataset="training", digits=np.arange(10), path="."):
     fimg.close()
     # Find indices of images whose labels are in the specified digit labels.
     ind = [ k for k in range(size) if lbl[k] in digits ]
-    N = len(ind)
+    N = int(len(ind) * prop/100.)
     # Generate images and labels.
     images = zeros((N, rows, cols), dtype=uint8)
     labels = zeros((N, 1), dtype=int8)
-    for i in range(len(ind)):
+    for i in range(int(len(ind) * prop/100.)):
         images[i] = array(img[ ind[i]*rows*cols : (ind[i]+1)*rows*cols ]).reshape((rows, cols))
         labels[i] = lbl[ind[i]]
     # flatten labels from format [[3],[2],[5],...] to [3,2,5,...]
