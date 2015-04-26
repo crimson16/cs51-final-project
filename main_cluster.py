@@ -38,10 +38,11 @@ else:
     if arg_num >= 4:
         if sys.argv[3] == "kplusplus":
             init_type = "kplusplus"
-    if arg_num >=3:
+    if arg_num >= 3:
         if str(sys.argv[2]) in ["means", "medoids", "medians"]:
             method = str(sys.argv[2])
 
+print k, method, init_type, prop
 ######################################
 # Load in training images and labels #
 ######################################
@@ -94,8 +95,8 @@ def main (k, m="means", init_type="random"):
 
 
     # Save representative images to file.
-
     title = m + "_" + init_type + "_cluster" + str(k)
+    print title
     Load.save_images(k, train_images, final_responsibilities, 
                      final_clusters, title)
 
