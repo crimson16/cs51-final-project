@@ -1,16 +1,21 @@
+
+
+# Helper Packages
 import numpy as np
 import os, struct,random #,
 import sys
 from numpy import append, array, int8, uint8, zeros
+import base64
+import json
+import timeit
+
+# Created functions
 import Initialize
 import Accuracy
 import Distance
 import Load
 import Kmeans
 import ClassifyClusters
-import base64
-import json
-import timeit
 
 
 #########################
@@ -27,10 +32,10 @@ if arg_num == 3:
     if sys.argv[2] in ["means", "medoids", "medians"]:
         method = sys.argv[2]
 elif arg_num == 4:
-    if sys.argv[3] == "k_plus_plus":
-        init_type = "k_plus_plus"
+    if sys.argv[3] == "kplusplus":
+        init_type = "kplusplus"
 elif arg_num == 5:
-    if int(sys.argv[4]) > 0 and int(sys.argv[4]) <= 0:
+    if int(sys.argv[4]) > 0 and int(sys.argv[4]) <= 100:
         prop = int(sys.argv[4])
 elif arg_num > 5:
     raise ValueError("4 argument max")
@@ -68,8 +73,8 @@ def main (k, m="means", init_type="random"):
     if init_type == "random":
         initial_clusters = Initialize.random_centers(k)
     else:
-        init_type = "k_plus_plus"
-        initial_clusters = kmeans_plusplus(k, train_images_flat,
+        init_type = "kplusplus"
+        initial_clusters = Initialize.kmeans_plusplus(k, train_images_flat,
                                            dist_fn=Distance.sumsq)
         
         
@@ -113,8 +118,6 @@ def main (k, m="means", init_type="random"):
     # Serializing numpy array - from below source 
     # http://stackoverflow.com/questions/3488934/simplejson-and-numpy-array
 
-
-
     class NumpyEncoder(json.JSONEncoder):
         def default(self, obj):
             """
@@ -149,11 +152,13 @@ def main (k, m="means", init_type="random"):
     "clustering_time" : clustering_time, "testing_time" : testing_time}
 
 
-    with open(title + '_results.json', 'w') as outfile:
+    with open('./' + title + '/' + title + '_results.json', 'w') as outfile:
         json.dump(results, outfile, cls=NumpyEncoder)
 
 
 ####################
 # Call to function #
 ####################
-main(k, method, init_type, prop)
+main(k, method, init_type)
+
+
