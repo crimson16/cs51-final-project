@@ -96,6 +96,7 @@ def main (k, m="means", init_type="random"):
     # Save representative images to file.
 
     title = m + "_" + init_type + "_cluster" + str(k)
+    print title
     Load.save_images(k, train_images, final_responsibilities, 
                      final_clusters, title)
 
