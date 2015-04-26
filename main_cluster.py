@@ -28,19 +28,19 @@ prop = 5
 
 # Process Command Line Arguments
 arg_num = len(sys.argv)
-if arg_num == 3:
-    if sys.argv[2] in ["means", "medoids", "medians"]:
-        method = sys.argv[2]
-elif arg_num == 4:
-    if sys.argv[3] == "kplusplus":
-        init_type = "kplusplus"
-elif arg_num == 5:
-    if int(sys.argv[4]) > 0 and int(sys.argv[4]) <= 100:
-        prop = int(sys.argv[4])
-elif arg_num > 5:
-    raise ValueError("4 argument max")
-# call to main at end
 
+if arg_num > 5:
+    raise ValueError("4 argument max")
+else:
+    if arg_num == 5:
+        if int(sys.argv[4]) > 0 and int(sys.argv[4]) <= 100:
+            prop = int(sys.argv[4])
+    if arg_num >= 4:
+        if sys.argv[3] == "kplusplus":
+            init_type = "kplusplus"
+    if arg_num >=3:
+        if str(sys.argv[2]) in ["means", "medoids", "medians"]:
+            method = str(sys.argv[2])
 
 ######################################
 # Load in training images and labels #
@@ -57,6 +57,7 @@ test_images_flat = np.array([np.ravel(img) for img in test_images])
 def main (k, m="means", init_type="random"):
     
     # Starting clustering timer
+
     start_cluster = timeit.default_timer()
     
     # Process arguments
@@ -93,6 +94,7 @@ def main (k, m="means", init_type="random"):
 
 
     # Save representative images to file.
+
     title = m + "_" + init_type + "_cluster" + str(k)
     Load.save_images(k, train_images, final_responsibilities, 
                      final_clusters, title)
@@ -159,6 +161,6 @@ def main (k, m="means", init_type="random"):
 ####################
 # Call to function #
 ####################
-main(k, method, init_type)
+main(k, m=method, init_type=init_type)
 
 
