@@ -1,0 +1,15 @@
+/usr/lib/python2.7/dist-packages/numpy/core/_methods.py:55: RuntimeWarning: Mean of empty slice.
+  warnings.warn("Mean of empty slice.", RuntimeWarning)
+/usr/lib/python2.7/dist-packages/numpy/core/_methods.py:65: RuntimeWarning: invalid value encountered in true_divide
+  ret, rcount, out=ret, casting='unsafe', subok=False)
+40 medoids random 100
+Traceback (most recent call last):
+  File "main_cluster.py", line 165, in <module>
+    main(k, m=method, init_type=init_type)
+  File "main_cluster.py", line 86, in main
+    initial_clusters, distfn = Distance.sumsq, method=m)
+  File "/home/ubuntu/ty-project/Kmeans.py", line 73, in kmeans
+    means[smallk,:] = training_data[list(ones),:][np.argmin(dist_to_ctr)]
+  File "/usr/lib/python2.7/dist-packages/numpy/core/fromnumeric.py", line 949, in argmin
+    return argmin(axis)
+ValueError: attempt to get argmin of an empty sequence
