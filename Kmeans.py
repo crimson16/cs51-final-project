@@ -2,7 +2,7 @@
 #                             Kmeans.py                             #
 #####################################################################
 # Runs a handwritten version of the k-means algorithm.              #
-# Takes in a vector of training data and of initial                                    #                                                   #
+# Takes in a vector of training data and of initial                 #
 #                                                                   #
 # Olivia Angiuli, Martin Reindl, Ty Rocca, Wilder Wohns             # 
 #####################################################################
@@ -49,6 +49,7 @@ def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
   # find and store k that minimize sum of square distance for each image
   newks = np.apply_along_axis(Distance.leastsquares, 1, training_data,
     initial_clusters, distfn)
+
   # create one hot coded vector for each image to signify cluster assignment
   r[range(n), newks] = 1
 
@@ -59,6 +60,7 @@ def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
   while True:
     for smallk in range(k): # iterate through clusters
       ones = np.where(r[:,smallk]==1)[0]
+      print ones
       # The k-means method updates cluster centers as being the mean of each
       # corresponding pixel of the datapoints that are contained in that
       # cluster.
