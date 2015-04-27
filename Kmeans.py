@@ -9,6 +9,7 @@
 
 import numpy as np
 import Distance
+import Initialize
 
 
 def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
@@ -47,8 +48,17 @@ def kmeans(k, training_data, initial_clusters, distfn = Distance.sumsq,
   r = np.zeros((n,k)) # create empty array to store cluster assignments
 
   # find and store k that minimize sum of square distance for each image
+  # in form of a vector of shape (n,)
   newks = np.apply_along_axis(Distance.leastsquares, 1, training_data,
     initial_clusters, distfn)
+
+  # Check if every cluster is represented within the cluster assignments;
+  # if not then re-initialize centers
+  while np.array_equal(np.unique(newks), np.array(range(k))) == False:
+    initial_clusters = Initialize.random_centers(k)
+    newks = np.apply_along_axis(Distance.leastsquares, 1, training_data,
+    initial_clusters, distfn)
+
   # create one hot coded vector for each image to signify cluster assignment
   r[range(n), newks] = 1
 
