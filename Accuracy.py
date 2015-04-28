@@ -36,13 +36,13 @@ import math
 
 
 def _make_clusters(assignments):
-  clusters = [] # declare list to store clusters in 
+    clusters = [] # declare list to store clusters in 
 
-  # find clusters
-  for i in range(len(assignments[0])):
-    clusters.append(np.nonzero(assignments[:,i])[0])
+    # find clusters
+    for i in range(len(assignments[0])):
+        clusters.append(np.nonzero(assignments[:,i])[0])
 
-  return clusters
+    return clusters
 
 
 
@@ -69,20 +69,20 @@ def _make_clusters(assignments):
 """
 
 def _digit_and_purity(cluster, labels):
-  e = len(cluster) # number of elements in cluster
-  cluster_labels = np.zeros(e) # array to store labels for our cluster in 
+    e = len(cluster) # number of elements in cluster
+    cluster_labels = np.zeros(e) # array to store labels for our cluster in 
 
-  # find the labels assigned to each image in the cluster
-  for i in range(e):
-    cluster_labels[i] = labels[cluster[i]]
+    # find the labels assigned to each image in the cluster
+    for i in range(e):
+        cluster_labels[i] = labels[cluster[i]]
 
-  # find most common digit and its frequency 
-  digit, digit_count = stats.mode(cluster_labels)
-  digit = digit[0] 
-  digit_count = digit_count[0] 
-  purity = digit_count/e 
+        # find most common digit and its frequency 
+        digit, digit_count = stats.mode(cluster_labels)
+        digit = digit[0] 
+        digit_count = digit_count[0] 
+        purity = digit_count/e 
 
-  return digit, purity
+    return digit, purity
 
 
 
@@ -158,7 +158,6 @@ def final_accuracy(assignments, labels, images, cluster_centers):
         info[i][2] = _std(clusters[i], cluster_centers[i], images)
         #find number of elements in cluster
         info[i][3] = len(clusters[i])
-
         # Make the cluster dataset, to use for classifying 
         cluster_set[i] = cluster_centers[i], info[i][0]
 

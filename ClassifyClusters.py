@@ -1,33 +1,37 @@
+###############################################################################
+#                              ClassifyClusters                               #
+###############################################################################
+# Allows calculating the distance between two images                          #                                
+#                                                                             #
+# Martin Reindl, Olivia Angiuli, Ty Roccca, Wilder Wohns                      # 
+###############################################################################
 
-####################
-# ClassifyClusters #
-####################
-
-'''
-
-ClassifyClusters is used to process our cluster. Right now 
-we have clusters, however, we do not use them for anything. What
-ClassifyClusters will do is it will take the test set and based on
-a naive implementation of knn we will be able to see how well we can
-identify points in the dataset
-
-Inputs
-------
-Clusters, Test dataset
-
-Outputs
--------
-Accuracy of our classifier, which matches the test images to
-the training data 
-
-What I am doing is essentially like taking final Accuracy and then applying
-it to our data set in a knn style
-
-'''
 import Distance
 import numpy as np
-def classify(cluster_set, test_set, test_labels, distfn = Distance.sumsq, n = None):
 
+"""
+    classify takes clusters from our training run, and applies them to our 
+    testing data. It then runs a number of accuracy functions to determine 
+    how well our algorithm identifies digits. 
+
+    Inputs
+    ------
+    cluster_set : clusters from our training run
+
+    test_set : the testing data 
+
+    test_labels : the correct digit assignments for the pictures in the 
+    testing data set. 
+
+    distfn : a function that calculates 'distance' between two images
+
+    Outputs
+    -------
+    Accuracy of our classifier, which matches the test images to
+    the training data 
+"""
+
+def classify(cluster_set,test_set,test_labels,distfn=Distance.sumsq,n=None):
     k = len(cluster_set)
     # Clusters is the array of final cluster means
     clusters = []
@@ -39,8 +43,8 @@ def classify(cluster_set, test_set, test_labels, distfn = Distance.sumsq, n = No
 
     if n == None:
         n = len(test_labels) - 1
-    test_clusters_asgn = np.apply_along_axis(Distance.leastsquares, 1, test_set[0:n],
-        clusters, distfn)
+    test_clusters_asgn = np.apply_along_axis(Distance.leastsquares, 1, 
+        test_set[0:n], clusters, distfn)
     test_clusters = np.array([c_index[i] for i in test_clusters_asgn])
 
     # correct numbers for dataset
@@ -51,25 +55,8 @@ def classify(cluster_set, test_set, test_labels, distfn = Distance.sumsq, n = No
     n_wrong = np.count_nonzero(diffs)
 
     prediction_level = ((n - n_wrong) / float(n))*100
-    print "Our accuracy in predicting test data for k = {0} was {1} %".format(k,prediction_level)
+    print "Our accuracy in predicting test data for k = {0} was {1} %"\
+        .format(k,prediction_level)
     
     # Return the cluster center
     return k, prediction_level, cluster_set
-
-    
-
-
-
-
-
-
-# now for each test image, calculate the closest center
-# def closest_center(image, clusters, cluster_assignments):
-    # return Distance.leastsquares(image, clusters, Distance.sumsq)
-
-# print closest_center(test_images_flat[0], final_clusters, cluster_assignments)
-
-# for image in test_images
-#     calculate the closest center
-#     determine if the assignment of that center is the same as actual
-#     report % correct
