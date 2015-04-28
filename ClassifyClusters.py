@@ -27,11 +27,11 @@ import numpy as np
 
     Outputs
     -------
-    Accuracy of our classifier, which matches the test images to
-    the training data 
+    The number of clusters, the original clusters, and the accuracy of 
+    our testing as a percentage.
 """
 
-def classify(cluster_set,test_set,test_labels,distfn=Distance.sumsq,n=None):
+def classify(cluster_set,test_set,test_labels,distfn=Distance.sumsq):
     k = len(cluster_set)
     # Clusters is the array of final cluster means
     clusters = []
@@ -40,9 +40,9 @@ def classify(cluster_set,test_set,test_labels,distfn=Distance.sumsq,n=None):
     for cluster in cluster_set:
         clusters.append(cluster[0])
         c_index.append(cluster[1])
+    # find number of datapoints
+    n = len(test_labels) - 1
 
-    if n == None:
-        n = len(test_labels) - 1
     test_clusters_asgn = np.apply_along_axis(Distance.leastsquares, 1, 
         test_set[0:n], clusters, distfn)
     test_clusters = np.array([c_index[i] for i in test_clusters_asgn])
@@ -54,7 +54,8 @@ def classify(cluster_set,test_set,test_labels,distfn=Distance.sumsq,n=None):
     # Count for incorrect assignments 
     n_wrong = np.count_nonzero(diffs)
 
-    prediction_level = ((n - n_wrong) / float(n))*100
+    # find out how accurate we were
+    prediction_level = ((n + 1- n_wrong) / float(n + 1))*100
     print "Our accuracy in predicting test data for k = {0} was {1} %"\
         .format(k,prediction_level)
     
