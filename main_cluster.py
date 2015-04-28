@@ -1,51 +1,73 @@
 
+###############################################################################
+#                                   Main.py                                   #
+###############################################################################
+# Main.py lies at the center of our clustering. It combines several other     #
+# modules (see below) to follow the four step implementation of clustering    #
+# we outlined in our proposal:                                                #
+# 1) Load Data                                                                #
+# 2) Initialize Clusters                                                      #
+# 3) Run Classification algorithm                                             #
+# 4) Find Accuracy                                                            #
+###############################################################################
 
-# Helper Packages
+
+
+###############################################################################
+#                               Import Packages                               #
+###############################################################################
+# import numpy and abbreviate because of common use
 import numpy as np
-import os, struct,random #,
-import sys
-from numpy import append, array, int8, uint8, zeros
-import base64
-import json
-import timeit
-
-# Created functions
-import Initialize
-import Accuracy
-import Distance
-import Load
-import Kmeans
-import ClassifyClusters
+# import other helper modules
+import os, struct, random, sys, base64, json, timeit
+# Import our modules
+import Initialize, Accuracy, Distance, Load, Kmeans, ClassifyClusters
 
 
-#########################
-# Set parameter values  #
-#########################
-k = int(sys.argv[1]) # number of clusters (system argument)
+###############################################################################
+#                           Set parameter values                              #
+###############################################################################
+
+# set default command line arguments 
+k = int(sys.argv[1])
+init_vis = "random"
 method = "means"
-init_type = "random"
 prop = 5
 
-# Process Command Line Arguments
-arg_num = len(sys.argv)
-
+# make sure user submitted a correct number of arguments
+arg_num = len(sys.argv) 
 if arg_num > 5:
-    raise ValueError("4 argument max")
+    raise ValueError("Too many arguments supplied")
+# if a correct number of arguments was passed update parameter values
 else:
+    # set proportion
     if arg_num == 5:
         if int(sys.argv[4]) > 0 and int(sys.argv[4]) <= 100:
             prop = int(sys.argv[4])
+        else: 
+            raise ValueError("Please select a proportion between 0 and 100")
+    # set initialization
     if arg_num >= 4:
         if sys.argv[3] == "kplusplus":
             init_type = "kplusplus"
+        elif sys.argv[3] == "random": 
+            init_type = "random"
+        else: 
+            raise ValueError("Method must be \'random\' or \'kplusplus\'")
+    # set method 
     if arg_num >= 3:
         if str(sys.argv[2]) in ["means", "medoids", "medians"]:
             method = str(sys.argv[2])
+        else: 
+            raise ValueError("Method must be \'means\', \'medians\' or \'medoids\'")
 
-print k, method, init_type, prop
-######################################
-# Load in training images and labels #
-######################################
+# show user what s/he is running
+print "Running %s algorithm with %s initialization, %d percent of the dataset\
+, and %d clusters" % (method, init_type, prop, k)
+
+###############################################################################
+#                                 Load Data                                   #
+###############################################################################
 
 # load training and testing images and labels as 60,000 x 28 x 28 array
 train_images,train_labels = Load.load_mnist("training",path=os.getcwd(), prop = prop)
@@ -55,10 +77,11 @@ test_images,test_labels = Load.load_mnist("testing",path=os.getcwd())
 train_images_flat = np.array([np.ravel(img) for img in train_images])
 test_images_flat = np.array([np.ravel(img) for img in test_images])
 
-def main (k, m="means", init_type="random"):
-    
-    # Starting clustering timer
 
+
+def main (k, m="means", init_type="random"):
+
+    # Starting clustering timer
     start_cluster = timeit.default_timer()
     
     # Process arguments
