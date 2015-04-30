@@ -102,10 +102,12 @@ def save_images(k, train_images, final_responsibilities, final_clusters,title):
         # Make an image from the uint format
         img = Image.fromarray(data, 'RGB')
         # If a directory to store the image doesn't already exist, create it
-        if not os.path.exists('./' + title):
-            os.mkdir('./' + title)
+        if not os.path.exists('./results'):
+            os.mkdir('./results')
+        if not os.path.exists('./results/' + title):
+            os.mkdir('./results/' + title)
         # Save image of cluster center as a png  
-        img.save('./' + title + '/mean' + str(j) + '.png')
+        img.save('./results/' + title + '/mean' + str(j) + '.png')
 
         # Randomly saves imgnum images from each cluster
         indices = np.nonzero(final_responsibilities[:, j])
@@ -118,7 +120,7 @@ def save_images(k, train_images, final_responsibilities, final_clusters,title):
             cluster_data[:,:,1] = np.reshape(train_images[sampled_n, :], (28,28))
             cluster_data[:,:,2] = np.reshape(train_images[sampled_n, :], (28,28))
             img = Image.fromarray(cluster_data, 'RGB')
-            img.save('./' + title + '/cluster' + str(j) + '_' + str(counter) +
+            img.save('./results/' + title + '/cluster' + str(j) + '_' + str(counter) +
                 '.png')
             counter += 1
 

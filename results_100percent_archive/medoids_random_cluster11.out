@@ -1,0 +1,21 @@
+11 medoids random 100
+0 [  3713.   4366.   2476.   4649.   6965.   6221.  14299.   2936.   4575.
+   6366.   3434.]
+1 [  4759.   4745.   2711.   7675.   5899.   5892.  11640.   2535.   4046.
+   6388.   3710.]
+[  4759.   4745.   2711.   7675.   5899.   5892.  11640.   2535.   4046.
+   6388.   3710.]
+Time spent clustering :  318.004123926
+medoids_random_cluster11
+Digit: 0  Purity: 88.0% SD: 2127.0  Count: 4759
+Digit: 1  Purity: 54.0% SD: 1702.9  Count: 11640
+Digit: 2  Purity: 29.3% SD: 2080.6  Count: 4745
+Digit: 3  Purity: 43.1% SD: 2063.4  Count: 9945
+Digit: 4  Purity:  0.0% SD:    0.0  Count: 0
+Digit: 5  Purity: 43.9% SD: 2148.2  Count: 2535
+Digit: 6  Purity: 45.1% SD: 1974.4  Count: 9602
+Digit: 7  Purity: 35.4% SD: 1910.9  Count: 7675
+Digit: 8  Purity: 61.3% SD: 2030.5  Count: 2711
+Digit: 9  Purity: 31.9% SD: 1977.5  Count: 6388
+Our accuracy in predicting test data for k = 11 was 46.9346934693 %
+Time spent testing :  29.08355093

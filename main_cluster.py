@@ -62,7 +62,7 @@ else:
     # set number of clusters
     if arg_num >= 2: 
         print sys.argv[1]
-        if int(sys.argv[1]) <= 10 or int(sys.argv[1]) >= 50: 
+        if int(sys.argv[1]) < 10 or int(sys.argv[1]) >= 50: 
             raise ValueError("Number of clusters must be between 10 and 50")
         else: 
             k = int(sys.argv[1])
@@ -141,7 +141,7 @@ def main (k, m="means", init_type="random"):
     # Now see how well we can classify the dataset
     start_cluster_test = timeit.default_timer()
     predictions = ClassifyClusters.classify(cluster_set, test_images_flat, 
-        test_labels, distfn = Distance.sumsq, n=None)
+        test_labels, distfn = Distance.sumsq)
     finish_cluster_test = timeit.default_timer()
 
     # find time it took to test 
@@ -157,12 +157,19 @@ def main (k, m="means", init_type="random"):
     "cluster_means" : cluster_set, "cluster_stats" : final,
     "clustering_time" : clustering_time, "testing_time" : testing_time}
 
-    with open('./' + title + '/' + title + '_results.json', 'w') as outfile:
+    with open('./results/' + title + '/' + title + '_results.json', 'w') as outfile:
         json.dump(results, outfile, cls=File.NumpyEncoder)
 
 ###############################################################################
 #                               Call to Function                              #
 ###############################################################################
 main(k, m=method, init_type=init_type)
+
+
+#
+
+# if optimize == True:
+#     Optimize.optimize()
+
 
 
