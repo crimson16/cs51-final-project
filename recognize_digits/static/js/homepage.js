@@ -64,7 +64,7 @@ function makeCanvas (canvasID) {
     
     context.strokeStyle = "yellow";
     context.lineJoin = "round";
-    context.lineWidth = 15;
+    context.lineWidth = 40;
               
     for(var i=0; i < clickX.length; i++) {        
       context.beginPath();
@@ -85,9 +85,8 @@ $("#predict").click(function(e) {
   var img = canvas.toDataURL();
   // make request to server
   $.post("predict/", {img: img, worked: "Yes"}, function(d) {
-    // remove any pre-existing results
-    // $("#results").children().remove()
     console.log(d);
+    d3.select('#number_context').style("display", "inline");
     d3.select('#number').html(parseInt(d));
 
   });
@@ -98,6 +97,7 @@ $("#predict").click(function(e) {
 $(document).ready(function() {
   makeCanvas("canvasDiv");
   $("#clearCanvas").on("click", function (){
+    d3.select('#number_context').style("display", "none");
     d3.select("#canvas").remove()
     makeCanvas("canvasDiv")
   })

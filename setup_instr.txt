@@ -2,9 +2,12 @@ SETUP INSTRUCTIONS
 For users who will want to be able to run our code.
 
 Usage:
-  python kmeans_raw.py k
+cd into the recognize_digits folder
+
+  python kmeans_raw.py k {method}
+
   python kmeans_scikitlearn.py k
-	where k is the number of clusters
+  where k is the number of clusters
 
 Setup:
   Training/testing images should first be manually unzipped, and placed in same directory
