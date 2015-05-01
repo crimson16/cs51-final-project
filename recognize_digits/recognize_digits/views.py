@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import base64
 import numpy as np
+import Distance
 
 
 # Loads home page
@@ -62,48 +63,17 @@ def shrink_image(img):
     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
     return img
 
+tmp = ""
 @csrf_exempt
 def predict(request):
     from PIL import Image
+
     # from StringIO import StringIO
     import base64
-    # import requests
 
-    # def transform(image_string):
-    #     STANDARD_SIZE = (28, 28)
-    #     f = StringIO(decode_base64(image_string))
-    #     img = Image.open(f)
-    #     img = img.getdata()
-    #     img = img.resize(STANDARD_SIZE)
-    #     img = map(list, img)
-    #     img = np.array(img)
-    #     s = img.shape[0] * img.shape[1]
-    #     img_wide = img.reshape(1, s)
-    #     return [img_wide[0]]
 
     best_set = get_best()["cluster_means"]
-    # # num = classify(get_best["cluster_means"], transform(request.POST["img"]))
 
-    # def transform(image_string):
-    #     import re
-    #     import cStringIO
-    #     import scipy.misc
-    #     STANDARD_SIZE = (28, 28)
-    #     imgstr = re.search(r'base64,(.*)', image_string).group(1)
-    #     tempimg = cStringIO.StringIO(imgstr.decode('base64'))
-    #     img = Image.open(tempimg)
-    #     img = img.getdata()
-    #     img = img.resize(STANDARD_SIZE)
-    #     img = scipy.misc.imresize(img, (784,1))
-    #     img = np.array(img)
-    #     return img
-
-    # number = classify(best_results, transform(request.POST["img"]))
-    # print "!@#$%^&#@!%^@&#*#^%$@!%@^#&"
-    # print ""
-    # print classify(best_results, transform(request.POST["img"]))
-    # print ""
-    # print "WQEVTHYT$EVWBRGHNTRVWGEHNTRGVB"
 
     import re
     import cStringIO
@@ -115,17 +85,21 @@ def predict(request):
     img = img.getdata()
 
     img = shrink_image(img)
-    img_array = np.array(img, dtype=np.uint8)
-
+    img_array = np.array(img)
 
     number = classify(best_set, [img_array])
+    print number
+    if image_string == tmp:
+        print "FUCK"
+    else:
+        print "different"
+        image_string = tmp
 
-    # return HttpResponse(json.dumps({"number": int(number)}))
+    # number = classify(best_set, [img_array])
+    # print request.POST['img']
     return HttpResponse(int(number))
-    # print request
 
 
-import Distance
 def classify(cluster_set,test_set,distfn=Distance.sumsq):
     
     # Clusters is the array of final cluster means
@@ -136,9 +110,9 @@ def classify(cluster_set,test_set,distfn=Distance.sumsq):
         c_index.append(cluster[1])
 
     test_clusters_asgn = np.apply_along_axis(Distance.leastsquares, 1, 
-        test_set, clusters[1:49], distfn)
+        test_set, clusters, distfn)
 
-    test_clusters = np.array([c_index[i + 1] for i in test_clusters_asgn])
+    test_clusters = np.array([c_index[i] for i in test_clusters_asgn])
 
     return int(test_clusters[0])
 
