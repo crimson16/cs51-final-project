@@ -42,7 +42,7 @@ Our Django app is another fun bonus part of the our project. The django app allo
     - cd into \code
     - run ` python manage.py runserver 8000 ` to run the app on your computer
         + *If it is your first time running the app you might need to run python manage.py make migrations*
-    - Then go to http://localhost:8000/ where the app should now be running
+    - Then go to [http://localhost:8000/](http://localhost:8000/) where the app should now be running
     - Draw a digit and click predict!
     
 ##### Optimizing function
