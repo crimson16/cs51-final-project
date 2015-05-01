@@ -4,7 +4,7 @@ For users who will want to be able to run our code.
 Usage:
 cd into the recognize_digits folder
 
-  python kmeans_raw.py k {method}
+  python kmeans_raw.py k {method} {initialization ty}
 
   python kmeans_scikitlearn.py k
   where k is the number of clusters

@@ -1,0 +1,23 @@
+15 medoids kplusplus 100
+0 [ 4199.  3840.  2294.  1234.  4428.  5127.  1299.  6109.  8342.  2447.
+  4955.  3594.  3343.  5425.  3364.]
+1 [ 3488.  3611.  1970.  1959.  3824.  3985.  2239.  5844.  6567.  4643.
+  5860.  3039.  4704.  4862.  3405.]
+2 [ 3342.  3498.  2219.  1771.  3814.  3817.  2151.  5913.  6574.  4651.
+  5983.  2907.  4751.  5177.  3432.]
+[ 3342.  3498.  2219.  1771.  3814.  3817.  2151.  5913.  6574.  4651.
+  5983.  2907.  4751.  5177.  3432.]
+Time spent clustering :  1982.28764415
+medoids_kplusplus_cluster15
+Digit: 0  Purity: 58.9% SD: 2112.2  Count: 9167
+Digit: 1  Purity: 50.1% SD: 1632.5  Count: 12557
+Digit: 2  Purity: 69.3% SD: 2142.9  Count: 3342
+Digit: 3  Purity: 58.6% SD: 2062.1  Count: 4751
+Digit: 4  Purity: 41.2% SD: 2054.6  Count: 5913
+Digit: 5  Purity: 34.7% SD: 1976.3  Count: 4651
+Digit: 6  Purity: 38.0% SD: 1941.6  Count: 2151
+Digit: 7  Purity: 43.6% SD: 1783.6  Count: 10744
+Digit: 8  Purity: 72.6% SD: 2007.5  Count: 2907
+Digit: 9  Purity: 45.1% SD: 1843.9  Count: 3817
+Our accuracy in predicting test data for k = 15 was 50.8450845085 %
+Time spent testing :  83.1547482014

@@ -1,0 +1,23 @@
+17 medoids random 100
+0 [  2747.  10855.   3185.   2880.   3907.   2322.   2393.   3712.   2151.
+   2333.   8252.   1929.   3535.   1406.   3521.   3263.   1609.]
+1 [ 2428.  9260.  3006.  2927.  3694.  3260.  2737.  3129.  3131.  4872.
+  6328.  1924.  4048.  1264.  2944.  2419.  2629.]
+2 [ 2397.  7980.  3027.  2938.  3669.  3786.  2778.  3105.  3169.  4920.
+  6695.  2018.  4106.  1444.  2904.  2422.  2642.]
+[ 2397.  7980.  3027.  2938.  3669.  3786.  2778.  3105.  3169.  4920.
+  6695.  2018.  4106.  1444.  2904.  2422.  2642.]
+Time spent clustering :  514.490768194
+medoids_random_cluster17
+Digit: 0  Purity: 87.6% SD: 2021.9  Count: 5449
+Digit: 1  Purity: 56.4% SD: 1566.1  Count: 11766
+Digit: 2  Purity: 94.3% SD: 2114.4  Count: 2642
+Digit: 3  Purity: 62.7% SD: 1988.1  Count: 7044
+Digit: 4  Purity: 48.0% SD: 2036.1  Count: 4613
+Digit: 5  Purity:  0.0% SD:    0.0  Count: 0
+Digit: 6  Purity: 76.3% SD: 1896.5  Count: 6447
+Digit: 7  Purity: 42.8% SD: 1842.1  Count: 8025
+Digit: 8  Purity: 65.7% SD: 1982.0  Count: 5301
+Digit: 9  Purity: 31.3% SD: 1874.6  Count: 8713
+Our accuracy in predicting test data for k = 17 was 59.3859385939 %
+Time spent testing :  28.6037678719
