@@ -86,3 +86,5 @@ def json_numpy_obj_hook(dct):
         data = base64.b64decode(dct['__ndarray__'])
         return np.frombuffer(data, dct['dtype']).reshape(dct['shape'])
     return dct
+
+optimize()
