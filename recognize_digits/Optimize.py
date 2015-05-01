@@ -3,9 +3,6 @@
 ######################################
 
 
-
-
-
 testing_ks = range(10,20) + range(20, 55, 5)
 methods = ["means", "medoids", "medians"]
 init_types = ["random", "kplusplus"]
