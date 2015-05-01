@@ -4,7 +4,7 @@
 
 '''
 
-The Optimize function can be called as it's own item. It will 
+The Optimize function can be called as its own item. It will 
 run all possible iterations of our k means algorithm and 
 will print out the best data from our clusters
 
@@ -86,3 +86,5 @@ def json_numpy_obj_hook(dct):
         data = base64.b64decode(dct['__ndarray__'])
         return np.frombuffer(data, dct['dtype']).reshape(dct['shape'])
     return dct
+
+optimize()
