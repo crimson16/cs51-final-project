@@ -166,10 +166,3 @@ def main (k, m="means", init_type="random"):
 main(k, m=method, init_type=init_type)
 
 
-#
-
-# if optimize == True:
-#     Optimize.optimize()
-
-
-

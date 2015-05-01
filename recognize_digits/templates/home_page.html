@@ -1,0 +1,74 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Recognizing digits</title>
+  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+
+  <script type="text/javascript" src="{% static 'js/libs/underscore-min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/libs/jquery-1.7.2.min.js' %}"></script>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
+
+  <script type="text/javascript" src="{% static 'js/libs/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/libs/d3.min.js' %}"></script>
+  
+
+</head>
+<body>
+
+<style type="text/css">
+  #canvas {
+    border: solid 1px #333;
+    cursor: pointer;
+    width: 280px;
+    height: 280px;
+    background: black;
+  }
+
+  #canvasDiv {
+    width: 500px
+  }
+
+  #main {
+    padding-left: 20px;
+  }
+
+  #box, p, h1{
+    /*padding-bottom: 10px;*/
+    /*padding-left: 10px;*/
+  }
+</style>
+
+<div id="main">
+  <h1>CS 51 Digit Identifier</h1>
+  <p>Draw a number. Is it :
+    <strong id="number"></strong>
+    </p>
+
+
+  <div id="canvasDiv" class="">
+   {% csrf_token %}
+  </div>
+
+  <div class="pull-left" >
+    <div id="box" class="">
+      <button id="clearCanvas" type="button" class="btn-xs btn-primary">Clear</button>
+      <button id="predict" type="button" class="btn-xs btn-danger">Predict</button>
+    </div>
+  </div>
+</div>
+
+<!-- </div> -->
+
+
+<script src="{% static 'js/homepage.js' %}"></script>
+</html>
+
+
+
+
+
