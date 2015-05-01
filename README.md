@@ -61,3 +61,8 @@ In ../results you will find the outputs from running all possible clusters. Each
 }
 ```
 
+##### Some comparisons
+
+**Comparing With SciKit-Learn: ** You can also compare our clusters to those of scikitlearn. The command for that is ```python kmeans_scikitlearn.py 10```
+
+**Comparing with Neural Network:** You can also compare our algorithim with this implementation of a neural network (we followed [this guide](http://neuralnetworksanddeeplearning.com/chap1.html)) The neural network is executed from the /code/neural_network/ directory. To run execute this command type: `python main_neural_network.py`. You can also type `ipython notebook` from this directory and see the iPython notebook version of the code.
