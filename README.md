@@ -47,6 +47,17 @@ Our Django app is another fun bonus part of the our project. The django app allo
     
 ##### Optimizing function
 * To run the optimization function (which will take a very long time to run since it clusters 102 different ways type ``python optimize.py`` and it will run the optimization of the code.
-        
-    
+
+### Other Notes
+
+In ../results you will find the outputs from running all possible clusters. Each file is a different method/initialization/k value. The files contain pictures of images from each cluster as well as the clusters means. Each file also contains a .json output which holds the results from running that trial. The json is formatted 
+``` python
+{ "k" : k, 
+    "prediction_accuracy" : predictions[1], #c ontains prediction percent for outputted clusters
+    "cluster_means" : cluster_set, # contains cluster means
+    "cluster_stats" : final,    # the results from clustering, this give you the breakdown and purity of each                                        # cluster for each number
+    "clustering_time" : clustering_time, # time to cluster in seconds
+    "testing_time" : testing_time # time to process the test data and assign clusters
+}
+```
 
