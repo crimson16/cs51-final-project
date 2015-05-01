@@ -63,7 +63,6 @@ def shrink_image(img):
     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
     return img
 
-tmp = ""
 @csrf_exempt
 def predict(request):
     from PIL import Image
@@ -88,15 +87,7 @@ def predict(request):
     img_array = np.array(img)
 
     number = classify(best_set, [img_array])
-    print number
-    if image_string == tmp:
-        print "FUCK"
-    else:
-        print "different"
-        image_string = tmp
 
-    # number = classify(best_set, [img_array])
-    # print request.POST['img']
     return HttpResponse(int(number))
 
 
