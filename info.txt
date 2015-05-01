@@ -1,0 +1,2 @@
+title: Unsupervised Machine Learning with Handwritten Digits
+seas-usernames: tylerrocca, awohns, martinreindl, oangiuli
