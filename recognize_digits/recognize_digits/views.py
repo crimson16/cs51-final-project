@@ -36,7 +36,7 @@ def get_best():
     return best_set
 
 
-# Process submitted image
+# Now We process the submited image
 
 # Helper function for images
 

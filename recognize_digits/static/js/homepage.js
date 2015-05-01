@@ -1,6 +1,7 @@
   
 function makeCanvas (canvasID) {
 
+  // Set attributes for the heights
   var canvasWidth = "280px"
   var canvasHeight = "280px"
 
@@ -63,7 +64,7 @@ function makeCanvas (canvasID) {
     
     context.strokeStyle = "yellow";
     context.lineJoin = "round";
-    context.lineWidth = 25;
+    context.lineWidth = 15;
               
     for(var i=0; i < clickX.length; i++) {        
       context.beginPath();
