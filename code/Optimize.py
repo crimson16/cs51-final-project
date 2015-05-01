@@ -4,7 +4,7 @@
 
 '''
 
-The Optimize function can be called as it's own item. It will 
+The Optimize function can be called as its own item. It will 
 run all possible iterations of our k means algorithm and 
 will print out the best data from our clusters
 
