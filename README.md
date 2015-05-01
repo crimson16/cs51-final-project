@@ -1,4 +1,4 @@
-#Recognizing Handwritten Digits Using K-means Clustering
+#Recognizing Handwritten Digits Using K-Means Clustering
 ### CS 51 Final Project 2015
 By: Olivia Angiuli, Martin Reindl, Ty Rocca, Wilder Wohns
 
